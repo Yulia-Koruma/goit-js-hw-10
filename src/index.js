@@ -1,18 +1,16 @@
 import SlimSelect from 'slim-select';
 import 'slim-select/dist/slimselect.css';
-import { fetchBreeds, fetchCatByBreed } from './cat-api'
+import { fetchBreeds, fetchCatByBreed } from './cat-api';
+import Notiflix from 'notiflix';
 
 const selector = document.querySelector('.breed-select');
 const loader = document.querySelector('.loader');
-const error = document.querySelector('.loader');
+const error = document.querySelector('.error');
 const catInfo = document.querySelector('.cat-info');
-
-
 
 loader.classList.replace('loader', 'is-hidden');
 error.classList.add('is-hidden');
 catInfo.classList.add('is-hidden');
-
 
 let arrBreedsId = [];
 fetchBreeds()
@@ -41,19 +39,24 @@ function onSelectBreed(event) {
         selector.classList.remove('is-hidden');
         const { url, breeds } = data[0];
         
-        catInfo.innerHTML = `<div class="box-img"><img src="${url}" alt="${breeds[0].name}" width="400"/></div><div class="box"><h1>${breeds[0].name}</h1><p>${breeds[0].description}</p><p><b>Temperament:</b> ${breeds[0].temperament}</p></div>`
+        catInfo.innerHTML = `<div class="img-container"><img src="${url}" alt="${breeds[0].name}" width="400" height="auto"/></div>
+        <div class="text-container">
+        <h1>${breeds[0].name}</h1>
+        <p>${breeds[0].description}</p>
+        <p class="temperament">Temperament: ${breeds[0].temperament}</p>
+        </div>`
         catInfo.classList.remove('is-hidden');
     })
     .catch(onFetchError);
 };
 
-function onFetchError(er) {
+function onFetchError() {
     selector.classList.remove('is-hidden');
     loader.classList.replace('loader', 'is-hidden');
 
     Notiflix.Notify.failure('Oops! Something went wrong! Try reloading the page or select another cat breed!', {
         position: 'center-center',
-        timeout: 5000,
+        timeout: 4000,
         width: '400px',
         fontSize: '24px'
     });
